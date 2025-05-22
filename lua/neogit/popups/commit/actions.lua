@@ -44,8 +44,9 @@ local function do_commit(popup, cmd)
 end
 
 local function commit_special(popup, method, opts)
-  if not git.status.anything_staged() and not allow_empty(popup) then
-    if git.status.anything_unstaged() then
+  local status_output = git.status.latest_status()
+  if not git.status.anything_staged(status_output) and not allow_empty(popup) then
+    if git.status.anything_unstaged(status_output) then
       if input.get_permission("Nothing is staged. Commit all uncommitted changed?") then
         opts.all = true
       else
@@ -113,8 +114,9 @@ function M.commit(popup)
 end
 
 function M.extend(popup)
-  if not git.status.anything_staged() and not allow_empty(popup) then
-    if git.status.anything_unstaged() then
+  local status_output = git.status.latest_status()
+  if not git.status.anything_staged(status_output) and not allow_empty(popup) then
+    if git.status.anything_unstaged(status_output) then
       if input.get_permission("Nothing is staged. Commit all uncommitted changes?") then
         git.status.stage_modified()
       else
@@ -190,8 +192,9 @@ function M.absorb(popup)
     return
   end
 
-  if not git.status.anything_staged() and not allow_empty(popup) then
-    if git.status.anything_unstaged() then
+  local status_output = git.status.latest_status()
+  if not git.status.anything_staged(status_output) and not allow_empty(popup) then
+    if git.status.anything_unstaged(status_output) then
       if input.get_permission("Nothing is staged. Absorb all unstaged changes?") then
         git.status.stage_modified()
       else

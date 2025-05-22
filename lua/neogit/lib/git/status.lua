@@ -244,23 +244,33 @@ function M.unstage_all()
   git.cli.reset.call { await = true }
 end
 
----@return boolean
-function M.is_dirty()
-  return M.anything_unstaged() or M.anything_staged()
+---@return string[]
+function M.latest_status(status_output)
+  if status_output == nil then
+    return git.cli.status.porcelain(2).call({ hidden = true }).stdout
+  else
+    return status_output
+  end
 end
 
 ---@return boolean
-function M.anything_staged()
-  local output = git.cli.status.porcelain(2).call({ hidden = true }).stdout
-  return vim.iter(output):any(function(line)
+function M.is_dirty(status_output)
+  local status_output = M.latest_status(status_output)
+  return M.anything_unstaged(status_output) or M.anything_staged(status_output)
+end
+
+---@return boolean
+function M.anything_staged(status_output)
+  local status_output = M.latest_status(status_output)
+  return vim.iter(status_output):any(function(line)
     return line:match("^%d [^%.]")
   end)
 end
 
 ---@return boolean
-function M.anything_unstaged()
-  local output = git.cli.status.porcelain(2).call({ hidden = true }).stdout
-  return vim.iter(output):any(function(line)
+function M.anything_unstaged(status_output)
+  local status_output = M.latest_status(status_output)
+  return vim.iter(status_output):any(function(line)
     return line:match("^%d %..")
   end)
 end
