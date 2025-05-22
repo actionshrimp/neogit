@@ -74,6 +74,7 @@ local runner = require("neogit.runner")
 ---@field branch self
 ---@field verbose self
 ---@field null_separated self
+---@field ignore_submodules self
 ---@field porcelain fun(string): self
 
 ---@class GitCommandLog: GitCommandBuilder
@@ -452,6 +453,7 @@ local configurations = {
       branch = "-b",
       verbose = "-v",
       null_separated = "-z",
+      ignore_submodules = "--ignore-submodules",
     },
     options = {
       porcelain = "--porcelain",

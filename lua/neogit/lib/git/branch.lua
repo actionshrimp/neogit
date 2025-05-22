@@ -398,7 +398,7 @@ end
 
 ---@return BranchStatus
 function M.status()
-  local result = git.cli.status.porcelain(2).branch.call { hidden = true }
+  local result = git.cli.status.ignore_submodules.porcelain(2).branch.call { hidden = true }
   local status = {}
   for _, line in ipairs(result.stdout) do
     if line:match("^# branch") then
